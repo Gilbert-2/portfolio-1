@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://neondb_owner:npg_Xr8HtlgIb2EM@ep-falling-rice-a8hgjpgh-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+    depends_on:
+      - mailer
+    volumes:
+      - ./src:/app/src
+    command: npm run start:dev
+
+  mailer:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
