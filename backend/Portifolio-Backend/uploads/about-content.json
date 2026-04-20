@@ -1,0 +1,34 @@
+{
+  "id": 1,
+  "fullName": "Gilbert Mugabe",
+  "headline": "Full Stack Developer",
+  "summary": "Hi! My name is Gilbert Mugabe and I find immense satisfaction in creating, designing, and implementing digital solutions. My venture into software development started with a profound passion for crafting innovative and scalable applications that effectively address real-world challenges.",
+  "biography": "I specialize in both frontend and backend development, with expertise in technologies like React, Redux, TypeScript, and Tailwind CSS for creating responsive user interfaces, as well as Node.js, Express, NestJS, MongoDB, and PostgreSQL for robust server-side solutions.",
+  "databases": [
+    "MongoDB",
+    "PostgreSQL",
+    "MySQL"
+  ],
+  "languages": [
+    "TypeScript",
+    "JavaScript"
+  ],
+  "frameworks": [
+    "NestJS",
+    "NextJS",
+    "ExpressJS",
+    "React",
+    "Redux",
+    "Tailwind CSS"
+  ],
+  "yearsExperience": 2,
+  "details": [
+    "I specialize in both frontend and backend development, with expertise in technologies like React, Redux, TypeScript, and Tailwind CSS for creating responsive user interfaces, as well as Node.js, Express, NestJS, MongoDB, and PostgreSQL for robust server-side solutions.",
+    "I hold a Bachelor of Computer Engineering with Honours at the University of Rwanda (2021-2025), which provided me with a strong technical foundation in software engineering principles.",
+    "From October 2023 to March 2024, I participated in the CSR Technical Program, which significantly enhanced my skills across various technologies and best practices in software development. This program allowed me to dive deep into both frontend and backend development, cementing my path as a Full Stack Engineer.",
+    "Most recently, I worked at FHR Rwanda as a Frontend Developer, where I developed a scalable financial management tools using Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as Software Developer, where I built a Y'ello care system using Spring Boot, Java, and PostgreSQL."
+  ],
+  "homeTagline": "Driven software engineer committed to building innovative, scalable solutions that power seamless digital experiences.",
+  "homeDescription": "Versatile and results-driven Full Stack Software Engineer with a proven track record of delivering robust, scalable, and innovative solutions across the software development lifecycle. Adept at leveraging both front-end and back-end technologies to create seamless, high-performance applications. Passionate about solving complex challenges through clean code, thoughtful architecture, and user-centric design.",
+  "resumePath": "/uploads/document/resume.pdf"
+}
