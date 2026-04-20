@@ -45,4 +45,25 @@ export class CreateAboutDto {
   @IsInt()
   @Min(0)
   yearsExperience?: number;
+
+  @ApiProperty({ example: ['Paragraph one', 'Paragraph two'], required: false, type: [String] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  details?: string[];
+
+  @ApiProperty({ example: 'Driven software engineer committed to building innovative, scalable solutions.', required: false })
+  @IsOptional()
+  @IsString()
+  homeTagline?: string;
+
+  @ApiProperty({ example: 'Versatile and results-driven Full Stack Software Engineer...', required: false })
+  @IsOptional()
+  @IsString()
+  homeDescription?: string;
+
+  @ApiProperty({ example: '/uploads/document/resume.pdf', required: false })
+  @IsOptional()
+  @IsString()
+  resumePath?: string;
 }

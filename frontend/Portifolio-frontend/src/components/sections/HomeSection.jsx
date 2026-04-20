@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Link as ScrollLink } from 'react-scroll';
 import Image from 'next/image';
+import axios from 'axios';
+import { ENDPOINTS, API_URL } from '../../lib/api-config';
 
 const { Title, Text } = Typography;
 
@@ -29,6 +31,7 @@ const useMediaQuery = (query) => {
 
 const HomeSection = () => {
   const [typedText, setTypedText] = useState('');
+  const [aboutData, setAboutData] = useState(null);
   const roles = ['Full Stack Developer', 'UI/UX Designer', 'Software Engineer', 'Software Tester'];
   const [roleIndex, setRoleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -64,9 +67,24 @@ const HomeSection = () => {
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, roleIndex, roles]);
 
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const response = await axios.get(`${ENDPOINTS.ABOUT}/latest`);
+        setAboutData(response.data);
+      } catch (error) {
+        console.error('Error fetching home/about content:', error);
+      }
+    };
+    fetchAbout();
+  }, []);
+
 
   const handleResumeView = () => {
-    window.open('/document/resume.pdf', '_blank');
+    const resumePath = aboutData?.resumePath || '/document/resume.pdf';
+    const isAbsolute = /^https?:\/\//i.test(resumePath);
+    const url = isAbsolute ? resumePath : `${API_URL}${resumePath}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -119,7 +137,7 @@ const HomeSection = () => {
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
               }}
             >
-              Eng. Gilbert Mugabe
+              {aboutData?.fullName ? `Eng. ${aboutData.fullName}` : 'Eng. Gilbert Mugabe'}
             </Title>
             
             <div className={`h-${isMobile ? '12' : '16'} mb-4`}>
@@ -150,8 +168,8 @@ const HomeSection = () => {
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
               }}
             >
-              Driven software engineer committed to building innovative,
-              scalable solutions that power seamless digital experiences.
+              {aboutData?.homeTagline ||
+                'Driven software engineer committed to building innovative, scalable solutions that power seamless digital experiences.'}
             </Title>
             
             <Text 
@@ -164,11 +182,10 @@ const HomeSection = () => {
                 textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)'
               }}
             >
-              {isMobile ? (
-                "Versatile Full Stack Engineer delivering robust, scalable solutions. Adept with front-end and back-end technologies creating high-performance applications."
-              ) : (
-                "Versatile and results-driven Full Stack Software Engineer with a proven track record of delivering robust, scalable, and innovative solutions across the software development lifecycle. Adept at leveraging both front-end and back-end technologies to create seamless, high-performance applications. Passionate about solving complex challenges through clean code, thoughtful architecture, and user-centric design."
-              )}
+              {aboutData?.homeDescription ||
+                (isMobile
+                  ? 'Versatile Full Stack Engineer delivering robust, scalable solutions. Adept with front-end and back-end technologies creating high-performance applications.'
+                  : 'Versatile and results-driven Full Stack Software Engineer with a proven track record of delivering robust, scalable, and innovative solutions across the software development lifecycle. Adept at leveraging both front-end and back-end technologies to create seamless, high-performance applications. Passionate about solving complex challenges through clean code, thoughtful architecture, and user-centric design.')}
             </Text>
             
             <Space 

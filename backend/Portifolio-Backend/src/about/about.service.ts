@@ -15,6 +15,9 @@ type AboutContent = {
   frameworks: string[];
   yearsExperience: number;
   details: string[];
+  homeTagline: string;
+  homeDescription: string;
+  resumePath: string;
 };
 
 const ABOUT_FALLBACK: AboutContent = {
@@ -35,6 +38,11 @@ const ABOUT_FALLBACK: AboutContent = {
     'From October 2023 to March 2024, I participated in the CSR Technical Program, which significantly enhanced my skills across various technologies and best practices in software development. This program allowed me to dive deep into both frontend and backend development, cementing my path as a Full Stack Engineer.',
     "Most recently, I worked at FHR Rwanda as a Frontend Developer, where I developed a scalable financial management tools using Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as Software Developer, where I built a Y'ello care system using Spring Boot, Java, and PostgreSQL.",
   ],
+  homeTagline:
+    'Driven software engineer committed to building innovative, scalable solutions that power seamless digital experiences.',
+  homeDescription:
+    'Versatile and results-driven Full Stack Software Engineer with a proven track record of delivering robust, scalable, and innovative solutions across the software development lifecycle. Adept at leveraging both front-end and back-end technologies to create seamless, high-performance applications. Passionate about solving complex challenges through clean code, thoughtful architecture, and user-centric design.',
+  resumePath: '/document/resume.pdf',
 };
 
 @Injectable()
@@ -61,6 +69,9 @@ export class AboutService {
         ...ABOUT_FALLBACK,
         ...parsed,
         details: parsed.details?.length ? parsed.details : ABOUT_FALLBACK.details,
+        homeTagline: parsed.homeTagline || ABOUT_FALLBACK.homeTagline,
+        homeDescription: parsed.homeDescription || ABOUT_FALLBACK.homeDescription,
+        resumePath: parsed.resumePath || ABOUT_FALLBACK.resumePath,
       };
     } catch (_err) {
       return ABOUT_FALLBACK;
@@ -81,7 +92,10 @@ export class AboutService {
       languages: createAboutDto.languages ?? current.languages,
       frameworks: createAboutDto.frameworks ?? current.frameworks,
       yearsExperience: createAboutDto.yearsExperience ?? current.yearsExperience,
-      details: current.details,
+      details: createAboutDto.details ?? current.details,
+      homeTagline: createAboutDto.homeTagline ?? current.homeTagline,
+      homeDescription: createAboutDto.homeDescription ?? current.homeDescription,
+      resumePath: createAboutDto.resumePath ?? current.resumePath,
       id: 1,
     };
     await this.writeContent(next);
@@ -113,7 +127,10 @@ export class AboutService {
       languages: updateAboutDto.languages ?? current.languages,
       frameworks: updateAboutDto.frameworks ?? current.frameworks,
       yearsExperience: updateAboutDto.yearsExperience ?? current.yearsExperience,
-      details: current.details,
+      details: updateAboutDto.details ?? current.details,
+      homeTagline: updateAboutDto.homeTagline ?? current.homeTagline,
+      homeDescription: updateAboutDto.homeDescription ?? current.homeDescription,
+      resumePath: updateAboutDto.resumePath ?? current.resumePath,
       id: 1,
     };
     await this.writeContent(next);
@@ -125,5 +142,12 @@ export class AboutService {
       throw new NotFoundException(`About record with ID ${id} not found`);
     }
     await this.writeContent(ABOUT_FALLBACK);
+  }
+
+  async updateResumePath(path: string): Promise<AboutContent> {
+    const current = await this.readContent();
+    const next = { ...current, resumePath: path };
+    await this.writeContent(next);
+    return next;
   }
 }

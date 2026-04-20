@@ -14,9 +14,10 @@ import {
   Table,
   Tabs,
   Typography,
+  Upload,
   message,
 } from 'antd';
-import { PlusOutlined, LogoutOutlined, EditOutlined, DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
+import { PlusOutlined, LogoutOutlined, EditOutlined, DeleteOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { adminApi, clearAdminSession, getAdminUser } from '@/lib/admin-api';
 
 const { Title, Text } = Typography;
@@ -25,7 +26,7 @@ const makeFields = (fields) => fields.map((f) => ({ required: false, type: 'text
 const parseArray = (val) => (typeof val === 'string' ? val.split(',').map((s) => s.trim()).filter(Boolean) : val || []);
 
 const RESOURCES = [
-  { key: 'about', label: 'About', endpoint: '/about', fields: makeFields([{ name: 'fullName', required: true }, { name: 'headline', required: true }, { name: 'summary', type: 'textarea', required: true }, { name: 'biography', type: 'textarea' }, { name: 'databases' }, { name: 'languages' }, { name: 'frameworks' }, { name: 'yearsExperience', type: 'number' }]) },
+  { key: 'about', label: 'About', endpoint: '/about', fields: makeFields([{ name: 'fullName', required: true }, { name: 'headline', required: true }, { name: 'summary', type: 'textarea', required: true }, { name: 'biography', type: 'textarea' }, { name: 'details', type: 'textarea-array' }, { name: 'homeTagline', type: 'textarea' }, { name: 'homeDescription', type: 'textarea' }, { name: 'resumePath' }, { name: 'databases' }, { name: 'languages' }, { name: 'frameworks' }, { name: 'yearsExperience', type: 'number' }]) },
   { key: 'education', label: 'Education', endpoint: '/resume/education', fields: makeFields([{ name: 'institution', required: true }, { name: 'degree', required: true }, { name: 'fieldOfStudy', required: true }, { name: 'startDate', type: 'date', required: true }, { name: 'endDate', type: 'date' }, { name: 'description', type: 'textarea' }]) },
   { key: 'skills', label: 'Skills', endpoint: '/resume/skills', fields: makeFields([{ name: 'category', required: true }, { name: 'name', required: true }, { name: 'level', type: 'number', required: true }, { name: 'order', type: 'number' }]) },
   { key: 'experience', label: 'Experience', endpoint: '/resume/experience', fields: makeFields([{ name: 'company', required: true }, { name: 'position', required: true }, { name: 'location' }, { name: 'startDate', type: 'date', required: true }, { name: 'endDate', type: 'date' }, { name: 'description', type: 'textarea', required: true }, { name: 'technologies' }]) },
@@ -39,12 +40,14 @@ const RESOURCES = [
 ];
 
 const ARRAY_FIELDS = new Set(['technologies', 'tags', 'databases', 'languages', 'frameworks']);
+const NEWLINE_ARRAY_FIELDS = new Set(['details']);
 const BOOL_FIELDS = new Set(['featured', 'published', 'read', 'replied']);
 
 function normalizePayload(values) {
   const payload = { ...values };
   Object.keys(payload).forEach((key) => {
     if (ARRAY_FIELDS.has(key)) payload[key] = parseArray(payload[key]);
+    if (NEWLINE_ARRAY_FIELDS.has(key)) payload[key] = parseArray(String(payload[key] || '').replace(/\n/g, ','));
     if (BOOL_FIELDS.has(key)) payload[key] = String(payload[key]) === 'true';
     if (payload[key] === '') payload[key] = null;
   });
@@ -59,6 +62,7 @@ export default function AdminDashboardPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [resumeUploading, setResumeUploading] = useState(false);
   const [form] = Form.useForm();
 
   const activeResource = useMemo(() => RESOURCES.find((r) => r.key === active), [active]);
@@ -101,6 +105,7 @@ export default function AdminDashboardPage() {
     const values = { ...row };
     Object.keys(values).forEach((k) => {
       if (ARRAY_FIELDS.has(k) && Array.isArray(values[k])) values[k] = values[k].join(', ');
+      if (NEWLINE_ARRAY_FIELDS.has(k) && Array.isArray(values[k])) values[k] = values[k].join('\n');
       if (BOOL_FIELDS.has(k) && typeof values[k] === 'boolean') values[k] = values[k] ? 'true' : 'false';
     });
     form.setFieldsValue(values);
@@ -162,6 +167,23 @@ export default function AdminDashboardPage() {
     ];
   }, [activeResource]);
 
+  const uploadResume = async ({ file }) => {
+    setResumeUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      await adminApi.post('/about/resume', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      message.success('Resume uploaded successfully');
+      await fetchResource(RESOURCES.find((r) => r.key === 'about'));
+    } catch (error) {
+      message.error(error?.response?.data?.message || 'Resume upload failed');
+    } finally {
+      setResumeUploading(false);
+    }
+  };
+
   if (loading) {
     return <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}><Spin /></div>;
   }
@@ -189,6 +211,18 @@ export default function AdminDashboardPage() {
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>Create {activeResource.label.slice(0, -1) || 'Record'}</Button>
         </Space>
         <Table rowKey="id" columns={columns} dataSource={dataMap[active] || []} scroll={{ x: true }} pagination={{ pageSize: 8 }} />
+        {active === 'about' && (
+          <Card style={{ marginTop: 16 }} size="small" title="Resume Upload">
+            <Upload customRequest={uploadResume} showUploadList={false} accept=".pdf,.doc,.docx">
+              <Button icon={<UploadOutlined />} loading={resumeUploading}>
+                Upload Resume
+              </Button>
+            </Upload>
+            <Text type="secondary" style={{ marginLeft: 12 }}>
+              Upload a new resume file for the Home "My Resume" button.
+            </Text>
+          </Card>
+        )}
       </Card>
 
       <Modal open={open} title={`${editing ? 'Edit' : 'Create'} ${activeResource.label}`} onCancel={() => setOpen(false)} footer={null} destroyOnClose width={760}>
@@ -197,6 +231,8 @@ export default function AdminDashboardPage() {
             <Form.Item key={field.name} label={field.name} name={field.name} rules={field.required ? [{ required: true, message: `${field.name} is required` }] : []}>
               {field.type === 'textarea' ? (
                 <Input.TextArea rows={4} />
+              ) : field.type === 'textarea-array' ? (
+                <Input.TextArea rows={5} placeholder="One paragraph per line" />
               ) : field.type === 'number' ? (
                 <InputNumber style={{ width: '100%' }} />
               ) : field.type === 'select' ? (
