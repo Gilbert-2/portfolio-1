@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
   images: {
     remotePatterns: [],
   },
+
   transpilePackages: [
     'antd',
     '@ant-design/icons',
@@ -32,7 +34,11 @@ const nextConfig = {
     'rc-cascader',
     'rc-upload',
   ],
- 
+
+  // ✅ ADD THIS (fix Turbopack warning)
+  turbopack: {},
+
+  // ⚠️ KEEP webpack (needed for your setup)
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -40,8 +46,7 @@ const nextConfig = {
         fs: false,
       };
     }
-    
-   
+
     config.module.rules.push({
       test: /\.m?js$/,
       type: 'javascript/auto',
@@ -49,9 +54,9 @@ const nextConfig = {
         fullySpecified: false,
       },
     });
-    
+
     return config;
   },
-}
+};
 
 module.exports = nextConfig;

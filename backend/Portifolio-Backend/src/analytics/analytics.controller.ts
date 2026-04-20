@@ -1,10 +1,11 @@
 // src/analytics/analytics.controller.ts
 
-import { Controller, Get, Post, Body, Query, UseGuards, ParseDatePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards, Param, ParseIntPipe, Patch, Delete } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { CreateVisitorDto } from './dto/create-visitor.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UpdateVisitorDto } from './dto/update-visitor.dto';
 
 
 @ApiTags('Analytics-Management')
@@ -27,6 +28,33 @@ export class AnalyticsController {
   @ApiResponse({ status: 200, description: 'Return recent visitors.' })
   findAll() {
     return this.analyticsService.findAll();
+  }
+
+  @Get(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get visitor by id' })
+  @ApiResponse({ status: 200, description: 'Return visitor details.' })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.analyticsService.findOne(id);
+  }
+
+  @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Update visitor by id' })
+  @ApiResponse({ status: 200, description: 'Visitor updated successfully.' })
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateVisitorDto: UpdateVisitorDto) {
+    return this.analyticsService.update(id, updateVisitorDto);
+  }
+
+  @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Delete visitor by id' })
+  @ApiResponse({ status: 200, description: 'Visitor deleted successfully.' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.analyticsService.remove(id);
   }
 
   @Get('statistics')

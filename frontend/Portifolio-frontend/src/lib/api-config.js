@@ -1,14 +1,23 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+if (!process.env.NEXT_PUBLIC_API_URL) {
+  throw new Error("NEXT_PUBLIC_API_URL is not set");
+}
+
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const ENDPOINTS = {
-  EDUCATION: `${API_BASE_URL}/resume/education`,
-  EXPERIENCE: `${API_BASE_URL}/resume/experience`,
-  SKILLS: `${API_BASE_URL}/resume/skills?category`,
-  CERTIFICATES: `${API_BASE_URL}/resume/certificates`,
-  PROJECTS: `${API_BASE_URL}/projects`,
-  CONTACT: `${API_BASE_URL}/contact`,
-  HIRE: `${API_BASE_URL}/hire/proposals`,
-  BLOG: `${API_BASE_URL}/blog`,
+  ABOUT: `${process.env.NEXT_PUBLIC_API_URL}/about`,
+  EDUCATION: `${process.env.NEXT_PUBLIC_API_URL}/resume/education`,
+  EXPERIENCE: `${process.env.NEXT_PUBLIC_API_URL}/resume/experience`,
+  SKILLS: `${process.env.NEXT_PUBLIC_API_URL}/resume/skills`,
+  CERTIFICATES: `${process.env.NEXT_PUBLIC_API_URL}/resume/certificates`,
+  PROJECTS: `${process.env.NEXT_PUBLIC_API_URL}/projects`,
+  CONTACT: `${process.env.NEXT_PUBLIC_API_URL}/contact`,
+  HIRE: `${process.env.NEXT_PUBLIC_API_URL}/hire/proposals`,
+  BLOG: `${process.env.NEXT_PUBLIC_API_URL}/blog`,
+  AUTH_LOGIN: `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+  AUTH_PROFILE: `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
+  USERS: `${process.env.NEXT_PUBLIC_API_URL}/auth/users`,
+  VISITORS: `${process.env.NEXT_PUBLIC_API_URL}/analytics`,
 };
 
 export const formatDate = (dateString) => {

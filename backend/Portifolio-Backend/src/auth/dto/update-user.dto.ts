@@ -13,13 +13,13 @@ export class UpdateUserDto {
   @MinLength(6)
   password?: string;
 
-  @ApiProperty({ description: 'User first name', required: false })
+  @ApiProperty({ description: 'User full name', required: false })
   @IsOptional()
   @IsString()
-  firstName?: string;
+  fullName?: string;
 
-  @ApiProperty({ description: 'User last name', required: false })
+  @ApiProperty({ description: 'User role', required: false })
   @IsOptional()
   @IsString()
-  lastName?: string;
+  role?: string;
 }

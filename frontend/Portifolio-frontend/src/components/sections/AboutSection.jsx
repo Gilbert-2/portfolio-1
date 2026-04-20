@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Row, Col, Card, Tag } from 'antd';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import { ENDPOINTS } from '../../lib/api-config';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -25,6 +27,7 @@ const useMediaQuery = (query) => {
 };
 
 const AboutSection = () => {
+  const [aboutData, setAboutData] = useState(null);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -44,11 +47,34 @@ const AboutSection = () => {
     }
   };
 
-  const databases = ['MongoDB', 'PostgreSQL', 'MySQL'];
-  const languages = ['TypeScript', 'JavaScript'];
-  const frameworks = ['NestJS', 'NextJS', 'ExpressJS', 'React', 'Redux', 'Tailwind CSS'];
+  const databases = aboutData?.databases?.length ? aboutData.databases : ['MongoDB', 'PostgreSQL', 'MySQL'];
+  const languages = aboutData?.languages?.length ? aboutData.languages : ['TypeScript', 'JavaScript'];
+  const frameworks = aboutData?.frameworks?.length
+    ? aboutData.frameworks
+    : ['NestJS', 'NextJS', 'ExpressJS', 'React', 'Redux', 'Tailwind CSS'];
+  const detailParagraphs = aboutData?.details?.length
+    ? aboutData.details
+    : [
+        'I specialize in both frontend and backend development, with expertise in technologies like React, Redux, TypeScript, and Tailwind CSS for creating responsive user interfaces, as well as Node.js, Express, NestJS, MongoDB, and PostgreSQL for robust server-side solutions.',
+        'I hold a Bachelor of Computer Engineering with Honours at the University of Rwanda (2021-2025), which provided me with a strong technical foundation in software engineering principles.',
+        'From October 2023 to March 2024, I participated in the CSR Technical Program, which significantly enhanced my skills across various technologies and best practices in software development. This program allowed me to dive deep into both frontend and backend development, cementing my path as a Full Stack Engineer.',
+        "Most recently, I worked at FHR Rwanda as a Frontend Developer, where I developed a scalable financial management tools using Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as Software Developer, where I built an Y'ello care system using Spring Boot, Java, and PostgreSQL.",
+      ];
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const response = await axios.get(`${ENDPOINTS.ABOUT}/latest`);
+        setAboutData(response.data);
+      } catch (error) {
+        console.error('Error fetching about data:', error);
+      }
+    };
+
+    fetchAbout();
+  }, []);
 
   return (
     <section 
@@ -181,7 +207,7 @@ const AboutSection = () => {
                           fontWeight: 700
                         }}
                       >
-                        Gilbert Mugabe
+                        {aboutData?.fullName || 'Gilbert Mugabe'}
                       </Title>
                       <Text
                         style={{
@@ -190,7 +216,7 @@ const AboutSection = () => {
                           fontWeight: 500
                         }}
                       >
-                        Full Stack Developer
+                        {aboutData?.headline || 'Full Stack Developer'}
                       </Text>
                     </div>
                     <div
@@ -217,7 +243,7 @@ const AboutSection = () => {
                         textAlign: 'center'
                       }}
                     >
-                      2+<br/>Year Exp.
+                      {(aboutData?.yearsExperience || 2)}+<br/>Year Exp.
                     </span>
                   </div>
                   </div>
@@ -401,9 +427,15 @@ const AboutSection = () => {
                       marginBottom: '1.5rem'
                     }}
                   >
-                    Hi! My name is <Text strong style={{ color: '#FFFFFF' }}>Gilbert Mugabe</Text> and I find immense satisfaction in creating, designing, and 
-                    implementing digital solutions. My venture into software development started with a profound passion for crafting innovative and 
-                    scalable applications that effectively address real-world challenges.
+                    {aboutData?.summary ? (
+                      aboutData.summary
+                    ) : (
+                      <>
+                        Hi! My name is <Text strong style={{ color: '#FFFFFF' }}>Gilbert Mugabe</Text> and I find immense satisfaction in creating, designing, and
+                        implementing digital solutions. My venture into software development started with a profound passion for crafting innovative and
+                        scalable applications that effectively address real-world challenges.
+                      </>
+                    )}
                   </Paragraph>
                   
                   <Paragraph
@@ -413,9 +445,7 @@ const AboutSection = () => {
                       color: '#E0F7F7' 
                     }}
                   >
-                    I specialize in both <Text strong style={{ color: '#7EEAEA' }}>frontend and backend development</Text>, with expertise in technologies like React, 
-                    Redux, TypeScript, and Tailwind CSS for creating responsive user interfaces, as well as Node.js, 
-                    Express, NestJS, MongoDB, and PostgreSQL for robust server-side solutions.
+                    {detailParagraphs[0]}
                   </Paragraph>
 
                   <Paragraph
@@ -425,8 +455,7 @@ const AboutSection = () => {
                       color: '#E0F7F7' 
                     }}
                   >
-                    I hold a <Text strong style={{ color: '#7EEAEA' }}>Bachelor of Computer Engineering with Honours</Text> at the University of Rwanda (2021-2025),
-                    which provided me with a strong technical foundation in software engineering principles.
+                    {detailParagraphs[1]}
                   </Paragraph>
                   
                   <Paragraph
@@ -436,9 +465,7 @@ const AboutSection = () => {
                       color: '#E0F7F7' 
                     }}
                   >
-                    From October 2023 to March 2024, I participated in the <Text strong style={{ color: '#7EEAEA' }}>CSR Technical Program</Text>, which significantly enhanced my skills
-                    across various technologies and best practices in software development. This program allowed me to dive deep into
-                    both frontend and backend development, cementing my path as a Full Stack Engineer.
+                    {detailParagraphs[2]}
                   </Paragraph>
                   
                   <Paragraph
@@ -448,8 +475,7 @@ const AboutSection = () => {
                       color: '#E0F7F7'
                     }}
                   >
-                    Most recently, I worked at <Text strong style={{ color: '#7EEAEA' }}>FHR Rwanda</Text> as a Frontend Developer, where I developed a scalable 
-                    Financial management tools using Next.js, JavaScript, and Ant Design. I also interned at the <Text strong style={{ color: '#7EEAEA' }}>MTN Rwanda</Text> as Software Developer, where I built an Y'ello care system using Spring Boot, Java, and PostgreSQL.
+                    {detailParagraphs[3]}
                   </Paragraph>
                 </Card>
               </motion.div>

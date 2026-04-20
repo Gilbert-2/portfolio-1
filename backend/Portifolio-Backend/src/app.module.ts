@@ -13,6 +13,7 @@ import { ResumeModule } from './resume/resume.module';
 import { HireModule } from './hire/hire.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AboutModule } from './about/about.module';
 import { join, extname } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { MulterModule } from '@nestjs/platform-express';
@@ -119,6 +120,7 @@ import * as fs from 'fs';
     ResumeModule,
     AnalyticsModule,
     DashboardModule,
+    AboutModule,
   ],
   controllers: [AppController],
   providers: [AppService],

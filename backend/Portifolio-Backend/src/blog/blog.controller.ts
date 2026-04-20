@@ -37,18 +37,18 @@ export class BlogController {
     return this.blogService.findByTag(tag);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a blog post by id' })
-  @ApiResponse({ status: 200, description: 'Return the found post.', type: BlogPost })
-  findOne(@Param('id') id: string): Promise<BlogPost> {
-    return this.blogService.findOne(+id);
-  }
-
   @Get('slug/:slug')
   @ApiOperation({ summary: 'Get a blog post by slug' })
   @ApiResponse({ status: 200, description: 'Return the found post.', type: BlogPost })
   findBySlug(@Param('slug') slug: string): Promise<BlogPost> {
     return this.blogService.findBySlug(slug);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a blog post by id' })
+  @ApiResponse({ status: 200, description: 'Return the found post.', type: BlogPost })
+  findOne(@Param('id') id: string): Promise<BlogPost> {
+    return this.blogService.findOne(+id);
   }
 
   @Patch(':id')

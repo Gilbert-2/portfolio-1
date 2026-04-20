@@ -1,11 +1,12 @@
 // src/analytics/analytics.service.ts
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { Visitor } from './entities/visitor.entity';
 import { CreateVisitorDto } from './dto/create-visitor.dto';
 import { VisitorStatisticsDto } from './dto/visitor-statistics.dto';
+import { UpdateVisitorDto } from './dto/update-visitor.dto';
 
 @Injectable()
 export class AnalyticsService {
@@ -24,6 +25,25 @@ export class AnalyticsService {
       order: { createdAt: 'DESC' },
       take: 100,
     });
+  }
+
+  async findOne(id: number): Promise<Visitor> {
+    const visitor = await this.visitorRepository.findOne({ where: { id } });
+    if (!visitor) {
+      throw new NotFoundException(`Visitor with ID ${id} not found`);
+    }
+    return visitor;
+  }
+
+  async update(id: number, updateVisitorDto: UpdateVisitorDto): Promise<Visitor> {
+    const visitor = await this.findOne(id);
+    Object.assign(visitor, updateVisitorDto);
+    return this.visitorRepository.save(visitor);
+  }
+
+  async remove(id: number): Promise<void> {
+    const visitor = await this.findOne(id);
+    await this.visitorRepository.remove(visitor);
   }
 
   async getVisitorCount(): Promise<number> {
