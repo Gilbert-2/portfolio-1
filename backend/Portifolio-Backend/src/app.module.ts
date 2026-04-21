@@ -30,14 +30,12 @@ import * as fs from 'fs';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
+        url: configService.get('DATABASE_URL'),
         autoLoadEntities: true,
         synchronize: configService.get('NODE_ENV') !== 'production',
-        ssl: false,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
     ThrottlerModule.forRoot({
@@ -66,12 +64,12 @@ import * as fs from 'fs';
       useFactory: (configService: ConfigService) => ({
         storage: diskStorage({
           destination: (req, file, cb) => {
-          
+
             const baseUploadPath = './uploads';
-            
-          
+
+
             let uploadPath = baseUploadPath;
-            
+
             if (req.originalUrl.includes('/projects')) {
               uploadPath = join(baseUploadPath, configService.get('uploadPaths.projects', 'projects'));
             } else if (req.originalUrl.includes('/blog')) {
@@ -79,26 +77,26 @@ import * as fs from 'fs';
             } else if (req.originalUrl.includes('/resume')) {
               uploadPath = join(baseUploadPath, configService.get('uploadPaths.resume', 'resume'));
             }
-            
-          
+
+
             if (!fs.existsSync(uploadPath)) {
               fs.mkdirSync(uploadPath, { recursive: true });
             }
-            
+
             cb(null, uploadPath);
           },
           filename: (req, file, cb) => {
-           
+
             const randomName = Array(32)
               .fill(null)
               .map(() => Math.round(Math.random() * 16).toString(16))
               .join('');
-            
+
             return cb(null, `${randomName}${extname(file.originalname)}`);
           },
         }),
         fileFilter: (req, file, cb) => {
-         
+
           const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
           if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
@@ -107,7 +105,7 @@ import * as fs from 'fs';
           }
         },
         limits: {
-          fileSize: 1024 * 1024 * 5, 
+          fileSize: 1024 * 1024 * 5,
         },
       }),
     }),
@@ -125,4 +123,4 @@ import * as fs from 'fs';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
