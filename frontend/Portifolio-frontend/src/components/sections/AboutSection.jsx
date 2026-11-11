@@ -58,7 +58,8 @@ const AboutSection = () => {
         'I work across both frontend and backend development, using React, Redux, TypeScript, and Tailwind CSS to build responsive user interfaces, and Node.js, Express, NestJS, MongoDB, and PostgreSQL to deliver reliable server-side systems.',
         'I hold a Bachelor of Computer Engineering with Honours from the University of Rwanda (2021–2025), which provided a strong foundation in software engineering principles.',
         'From October 2023 to March 2024, I completed the CSR Technical Program, where I strengthened my skills in modern software practices and confirmed my path as a Full Stack Engineer.',
-        "Most recently, I worked at FHR Rwanda as a Frontend Developer, building scalable financial management tools with Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as a Software Developer, where I built a Y'ello Care system using Spring Boot, Java, and PostgreSQL.",
+        "I have professional experience as a Frontend Developer at FHR Rwanda, where I built scalable financial management tools using Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as a Software Developer, where I developed a Y'ello Care system using Spring Boot, Java, and PostgreSQL.",
+        "I am passionate about building intuitive, user-focused applications, solving complex problems, and transforming ideas into practical digital solutions. I continuously seek opportunities to learn new technologies and contribute to impactful software projects.",
       ];
   const aboutParagraphStyle = {
     fontSize: '1rem',
