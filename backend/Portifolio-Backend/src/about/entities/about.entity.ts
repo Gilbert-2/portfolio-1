@@ -32,7 +32,7 @@ export class About extends BaseEntity {
   @Column({ type: 'simple-array', nullable: true, default: '' })
   frameworks: string[];
 
-  @ApiProperty({ example: 2, description: 'Years of experience' })
-  @Column({ name: 'years_experience', type: 'int', default: 1 })
+  @ApiProperty({ example: 4, description: 'Years of experience' })
+  @Column({ name: 'years_experience', type: 'int', default: 4 })
   yearsExperience: number;
 }

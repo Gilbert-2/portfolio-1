@@ -55,11 +55,18 @@ const AboutSection = () => {
   const detailParagraphs = aboutData?.details?.length
     ? aboutData.details
     : [
-        'I specialize in both frontend and backend development, with expertise in technologies like React, Redux, TypeScript, and Tailwind CSS for creating responsive user interfaces, as well as Node.js, Express, NestJS, MongoDB, and PostgreSQL for robust server-side solutions.',
-        'I hold a Bachelor of Computer Engineering with Honours at the University of Rwanda (2021-2025), which provided me with a strong technical foundation in software engineering principles.',
-        'From October 2023 to March 2024, I participated in the CSR Technical Program, which significantly enhanced my skills across various technologies and best practices in software development. This program allowed me to dive deep into both frontend and backend development, cementing my path as a Full Stack Engineer.',
-        "Most recently, I worked at FHR Rwanda as a Frontend Developer, where I developed a scalable financial management tools using Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as Software Developer, where I built an Y'ello care system using Spring Boot, Java, and PostgreSQL.",
+        'I work across both frontend and backend development, using React, Redux, TypeScript, and Tailwind CSS to build responsive user interfaces, and Node.js, Express, NestJS, MongoDB, and PostgreSQL to deliver reliable server-side systems.',
+        'I hold a Bachelor of Computer Engineering with Honours from the University of Rwanda (2021–2025), which provided a strong foundation in software engineering principles.',
+        'From October 2023 to March 2024, I completed the CSR Technical Program, where I strengthened my skills in modern software practices and confirmed my path as a Full Stack Engineer.',
+        "Most recently, I worked at FHR Rwanda as a Frontend Developer, building scalable financial management tools with Next.js, JavaScript, and Ant Design. I also interned at MTN Rwanda as a Software Developer, where I built a Y'ello Care system using Spring Boot, Java, and PostgreSQL.",
       ];
+  const aboutParagraphStyle = {
+    fontSize: '1rem',
+    lineHeight: '1.8',
+    color: '#E0F7F7',
+    fontWeight: 400,
+    marginBottom: '1rem',
+  };
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
@@ -243,7 +250,7 @@ const AboutSection = () => {
                         textAlign: 'center'
                       }}
                     >
-                      {(aboutData?.yearsExperience || 2)}+<br/>Year Exp.
+                      {(aboutData?.yearsExperience || 4)}+<br/>Year Exp.
                     </span>
                   </div>
                   </div>
@@ -418,65 +425,15 @@ const AboutSection = () => {
                   }}
                   className="h-full"
                 >
-                  <Paragraph
-                    style={{
-                      fontSize: '0.9rem',
-                      lineHeight: '1.8',
-                      color: '#E0F7F7', 
-                      fontWeight: 500,
-                      marginBottom: '1.5rem'
-                    }}
-                  >
-                    {aboutData?.summary ? (
-                      aboutData.summary
-                    ) : (
-                      <>
-                        Hi! My name is <Text strong style={{ color: '#FFFFFF' }}>Gilbert Mugabe</Text> and I find immense satisfaction in creating, designing, and
-                        implementing digital solutions. My venture into software development started with a profound passion for crafting innovative and
-                        scalable applications that effectively address real-world challenges.
-                      </>
-                    )}
+                  <Paragraph style={aboutParagraphStyle}>
+                    {aboutData?.summary ||
+                      'I am Gilbert Mugabe, a Full Stack Developer focused on designing and delivering reliable digital products. I build innovative, scalable applications that solve real business problems.'}
                   </Paragraph>
-                  
-                  <Paragraph
-                    style={{
-                      fontSize: '0.9rem',
-                      lineHeight: '1.8',
-                      color: '#E0F7F7' 
-                    }}
-                  >
-                    {detailParagraphs[0]}
-                  </Paragraph>
-
-                  <Paragraph
-                    style={{
-                      fontSize: '0.9rem',
-                      lineHeight: '1.8',
-                      color: '#E0F7F7' 
-                    }}
-                  >
-                    {detailParagraphs[1]}
-                  </Paragraph>
-                  
-                  <Paragraph
-                    style={{
-                      fontSize: '1rem',
-                      lineHeight: '1.8',
-                      color: '#E0F7F7' 
-                    }}
-                  >
-                    {detailParagraphs[2]}
-                  </Paragraph>
-                  
-                  <Paragraph
-                    style={{
-                      fontSize: '1.3rem',
-                      
-                      color: '#E0F7F7'
-                    }}
-                  >
-                    {detailParagraphs[3]}
-                  </Paragraph>
+                  {detailParagraphs.map((paragraph, index) => (
+                    <Paragraph key={index} style={aboutParagraphStyle}>
+                      {paragraph}
+                    </Paragraph>
+                  ))}
                 </Card>
               </motion.div>
             </Col>

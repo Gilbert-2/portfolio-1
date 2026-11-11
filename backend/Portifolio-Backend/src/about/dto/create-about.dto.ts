@@ -40,7 +40,7 @@ export class CreateAboutDto {
   @IsString({ each: true })
   frameworks?: string[];
 
-  @ApiProperty({ example: 2, required: false })
+  @ApiProperty({ example: 4, required: false })
   @IsOptional()
   @IsInt()
   @Min(0)
